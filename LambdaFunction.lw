@@ -1,0 +1,21 @@
+composition
+
+import Fugue.AWS as AWS
+import Fugue.AWS.IAM as IAM
+import Fugue.AWS.Lambda as Lambda
+
+lambdaRole: IAM.Role.new {
+  roleName: 'lambda-role',
+  assumeRolePolicyDocument: IAM.Policy.AssumeRole.lambda,
+}
+
+fn: Lambda.Function.new {
+  functionName: 'hello-world',
+  runtime: Lambda.Python3_6,
+  role: lambdaRole,
+  handler: 'lambda_handler',
+  code: Lambda.Code.fromZipFile {
+    path: "lambda_function.zip",
+  },
+  region: AWS.Us-east-1,
+}
