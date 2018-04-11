@@ -26,22 +26,16 @@ node {
           /* Test the lambda function */
           stage("Testing Serverless App") {
             sh(script: "lwc LambdaFunction.lw")
-            def cmdStatusCode = sh(script: "fugue status HelloWorldLambda", returnStatus: true)
-            if(cmdStatusCode == 0) {
-              sh(script: "fugue update HelloWorldLambda LambdaFunction.lw -y --dry-run")
-            } else {
-              sh(script: "fugue run LambdaFunction.lw -a HelloWorldLambda --dry-run")
-            }
           }
 
-          /* Deploy the lambda function */
-          stage("Deploy Serverless App") {
-            def cmdStatusCode = sh(script: "fugue status HelloWorldLambda", returnStatus: true)
-            if(cmdStatusCode == 0) {
-              sh(script: "fugue update HelloWorldLambda LambdaFunction.lw -y")
-            } else {
-              sh(script: "fugue run LambdaFunction.lw -a HelloWorldLambda")
-            }
+          /* Snapshot the composition */
+          stage("Snapshot Serverless App") {
+            sh(script: "lwc -s snapshot LambdaFunction.lw -o LambdaFunction.tar.gz")
+          }
+
+          /* Publish the composition */
+          stage("Publish Serverless App") {
+            sh(script: "curl -h")
           }
         }
       }
